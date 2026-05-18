@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\branches;
+use App\Models\Favourite;
 use Illuminate\Http\Request;
 
-class BranchesController extends Controller
+class FavouriteController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +34,7 @@ class BranchesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(branches $branches)
+    public function show(Favourite $favourite)
     {
         //
     }
@@ -42,7 +42,7 @@ class BranchesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(branches $branches)
+    public function edit(Favourite $favourite)
     {
         //
     }
@@ -50,7 +50,7 @@ class BranchesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, branches $branches)
+    public function update(Request $request, Favourite $favourite)
     {
         //
     }
@@ -58,7 +58,7 @@ class BranchesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(branches $branches)
+    public function destroy(Favourite $favourite)
     {
         //
     }

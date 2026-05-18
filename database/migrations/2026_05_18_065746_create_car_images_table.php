@@ -11,17 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('branches', function (Blueprint $table) {
+        Schema::create('car_images', function (Blueprint $table) {
             $table->id();
 
-            $table->string('name');
+            $table->foreignId('car_id')
+                ->constrained()
+                ->cascadeOnDelete();
 
-            $table->string('city');
-
-            $table->text('address');
-
-            $table->double('latitude')->nullable();
-            $table->double('longitude')->nullable();
+            $table->string('image');
 
             $table->timestamps();
         });
@@ -32,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('branches');
+        Schema::dropIfExists('car_images');
     }
 };

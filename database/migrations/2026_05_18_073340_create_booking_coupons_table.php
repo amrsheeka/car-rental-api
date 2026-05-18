@@ -11,17 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('branches', function (Blueprint $table) {
+        Schema::create('booking_coupons', function (Blueprint $table) {
             $table->id();
 
-            $table->string('name');
+            $table->foreignId('booking_id')
+                ->constrained()
+                ->cascadeOnDelete();
 
-            $table->string('city');
-
-            $table->text('address');
-
-            $table->double('latitude')->nullable();
-            $table->double('longitude')->nullable();
+            $table->foreignId('coupon_id')
+                ->constrained()
+                ->cascadeOnDelete();
 
             $table->timestamps();
         });
@@ -32,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('branches');
+        Schema::dropIfExists('booking_coupons');
     }
 };

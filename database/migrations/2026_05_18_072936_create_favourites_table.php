@@ -11,19 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('branches', function (Blueprint $table) {
+        Schema::create('favourites', function (Blueprint $table) {
             $table->id();
 
-            $table->string('name');
+            $table->foreignId('user_id')
+                ->constrained()
+                ->cascadeOnDelete();
 
-            $table->string('city');
-
-            $table->text('address');
-
-            $table->double('latitude')->nullable();
-            $table->double('longitude')->nullable();
+            $table->foreignId('car_id')
+                ->constrained()
+                ->cascadeOnDelete();
 
             $table->timestamps();
+
+            $table->unique(['user_id', 'car_id']);
         });
     }
 
@@ -32,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('branches');
+        Schema::dropIfExists('favourites');
     }
 };
