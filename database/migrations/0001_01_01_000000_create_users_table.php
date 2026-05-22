@@ -28,6 +28,8 @@ return new class extends Migration
             $table->enum('role', ['admin', 'customer'])->default('customer');
 
             $table->boolean('is_verified')->default(false);
+            $table->string('email_otp')->nullable();
+            $table->timestamp('email_otp_expires_at')->nullable();
 
             $table->rememberToken();
 
