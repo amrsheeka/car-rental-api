@@ -19,7 +19,7 @@ class CarFactory extends Factory
     {
         return [
             'branch_id' => 1,
-            'brand' => fake()->randomElement(['Toyota', 'BMW', 'Mercedes', 'Kia', 'Hyundai']),
+            'brand_id' => random_int(1, 7),
             'model' => fake()->word(),
             'year' => fake()->numberBetween(2015, 2025),
             'color' => fake()->safeColorName(),

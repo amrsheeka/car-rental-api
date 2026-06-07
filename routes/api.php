@@ -3,13 +3,13 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\BranchController;
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\FavouriteController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ReviewController;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -33,6 +33,9 @@ Route::get('/cars/{car}/reviews', [ReviewController::class, 'index']);
 
 // Coupons
 Route::post('/coupons/check', [CouponController::class, 'check']);
+
+// Brands
+Route::get('/brands', [BrandController::class, 'index']);
 
 
 

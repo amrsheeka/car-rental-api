@@ -18,7 +18,10 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnDelete();
 
-            $table->string('brand')->index();
+            $table->foreignId('brand_id')
+                ->constrained()
+                ->cascadeOnDelete();
+
             $table->string('model');
 
             $table->year('year');
