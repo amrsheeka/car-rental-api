@@ -12,11 +12,14 @@ class CarController extends Controller
      */
     public function index()
     {
-        $cars = Car::where('status', 'available')->where('featured', 1)->with('branch')->cursorPaginate(10);
+        $cars = Car::where('status', 'available')->
+        where('featured', 0)->
+        with('branch')->with('primaryImage')->with('brand')->cursorPaginate(4)
+        ;
         return response()->json([
             'success' => true,
             'message' => 'Cars retrieved successfully',
-            'data' => $cars
+            'cars' => $cars
         ]);
     }
 
@@ -41,7 +44,7 @@ class CarController extends Controller
      */
     public function show(Car $car)
     {
-        $car = Car::with('branch')->find($car->id);
+        $car = Car::with('branch')->with('images')->with('brand')->find($car->id);
         return response()->json([
             'success' => true,
             'message' => 'Car retrieved successfully',

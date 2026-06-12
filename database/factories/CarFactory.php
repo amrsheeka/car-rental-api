@@ -31,10 +31,11 @@ class CarFactory extends Factory
             'price_per_day' => fake()->randomFloat(2, 20, 200),
 
             'description' => fake()->sentence(),
-            'main_image' => fake()->imageUrl(640, 480, 'cars'),
 
             'status' => 'available',
             'featured' => fake()->boolean(30),
         ];
     }
+
+    
 }

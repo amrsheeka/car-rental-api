@@ -67,4 +67,13 @@ class Car extends Model
     {
         return $this->belongsTo(Brand::class);
     }
+    public function images()
+    {
+        return $this->hasMany(CarImage::class);
+    }
+    public function primaryImage()
+    {
+        return $this->hasOne(CarImage::class)
+            ->where('is_main', true);
+    }
 }

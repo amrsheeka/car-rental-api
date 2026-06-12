@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @property int $id
@@ -30,8 +31,16 @@ class Brand extends Model
         'name',
         'logo'
     ];
-        public function cars()
-        {
-            return $this->hasMany(Car::class);
-        }
+    protected $appends = ['logo_url'];
+    protected $hidden = ['logo'];
+    public function cars()
+    {
+        return $this->hasMany(Car::class);
+    }
+    public function getLogoUrlAttribute()
+    {
+        return $this->logo
+            ? asset(Storage::url($this->logo))
+            : null;
+    }
 }

@@ -52,7 +52,7 @@ class DatabaseSeeder extends Seeder
         
         Branch::factory(5)->create();
 
-        Car::factory(20)->create();
+        Car::factory(10)->create();
 
         User::factory(10)->create();
 
