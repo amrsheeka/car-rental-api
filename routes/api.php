@@ -21,8 +21,9 @@ Route::post('/login', [AuthController::class, 'login']);
 // Cars
 Route::get('/cars', [CarController::class, 'index']);
 Route::get('/cars/featured', [CarController::class, 'featured']);
-Route::get('/cars/search', [CarController::class, 'search']);
+Route::post('/cars/search', [CarController::class, 'search']);
 Route::get('/cars/{car}', [CarController::class, 'show']);
+
 
 // Branches
 Route::get('/branches', [BranchController::class, 'index']);

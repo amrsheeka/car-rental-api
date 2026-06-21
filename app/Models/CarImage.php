@@ -26,17 +26,17 @@ class CarImage extends Model
             ? asset(Storage::url($this->image))
             : null;
     }
-    public function setImageAttribute($value)
-    {
-        if ($value) {
-            $this->attributes['image'] = $value->store('car_images', 'public');
-        }
-    }
-    public function delete()
-    {
-        if ($this->image) {
-            Storage::disk('public')->delete($this->image);
-        }
-        parent::delete();
-    }
+    // public function setImageAttribute($value)
+    // {
+    //     if ($value) {
+    //         $this->attributes['image'] = $value->store('car_images', 'public');
+    //     }
+    // }
+    // public function delete()
+    // {
+    //     if ($this->image) {
+    //         Storage::disk('public')->delete($this->image);
+    //     }
+    //     parent::delete();
+    // }
 }

@@ -12,7 +12,7 @@ class BrandController extends Controller
      */
     public function index()
     {
-        $brands = Brand::cursorPaginate(10)->through(function ($brand) {
+        $brands = Brand::all()->map(function ($brand) {
             return [
                 'id' => $brand->id,
                 'name' => $brand->name,
