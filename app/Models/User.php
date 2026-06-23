@@ -72,4 +72,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_otp_expires_at' => 'datetime',
         ];
     }
+    public function reviews(){
+        return $this->hasMany(Review::class);
+    }
 }

@@ -76,4 +76,9 @@ class Car extends Model
         return $this->hasOne(CarImage::class)
             ->where('is_main', true);
     }
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+    
 }

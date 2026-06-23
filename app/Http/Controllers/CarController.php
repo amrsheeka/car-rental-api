@@ -13,7 +13,13 @@ class CarController extends Controller
      */
     public function index()
     {
-        $cars = Car::where('status', 'available')->where('featured', 0)->with('branch')->with('primaryImage')->with('brand')->cursorPaginate(4);
+        $cars = Car::where('status', 'available')
+        ->where('featured', 0)
+        ->with('branch')
+        ->with('primaryImage')
+        ->with('brand')
+        ->withAvg('reviews', 'rating')
+        ->cursorPaginate(4);
         return response()->json([
             'success' => true,
             'message' => 'Cars retrieved successfully',
@@ -42,7 +48,7 @@ class CarController extends Controller
      */
     public function show(Car $car)
     {
-        $car = Car::with('branch')->with('images')->with('brand')->find($car->id);
+        $car = Car::with('branch')->with('images')->with('brand')->withAvg('reviews', 'rating')->withCount('reviews')->find($car->id);
         return response()->json([
             'success' => true,
             'message' => 'Car retrieved successfully',
@@ -89,8 +95,8 @@ class CarController extends Controller
             ->when($request->featured, fn($q) => $q->where('featured', $request->featured))
             ->when($request->min_price, fn($q) => $q->where('price_per_day', '>=', $request->min_price))
             ->when($request->max_price, fn($q) => $q->where('price_per_day', '<=', $request->max_price))
-            ->with('branch')->with('primaryImage')->with('brand')
-            ->cursorPaginate(10);
+            ->with('branch')->with('primaryImage')->with('brand')->withCount('reviews')->withAvg('reviews', 'rating')
+            ->cursorPaginate(4);
         return response()->json([
             'success' => true,
             'message' => 'Filtered cars retrieved successfully',
