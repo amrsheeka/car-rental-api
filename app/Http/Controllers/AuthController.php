@@ -7,6 +7,7 @@ use App\Http\Requests\RegisterRequest;
 use App\Mail\SendOtpMail;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
@@ -27,16 +28,19 @@ class AuthController extends Controller
     {
         $validated = $request->validated();
         $otp = random_int(100000, 999999);
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-            'phone' => null,
-            'email_otp' => $otp,
-            'email_otp_expires_at' => now()->addMinutes(10),
-            'email_verified_at' => null,
-        ]);
-        Mail::to($user->email)->send(new SendOtpMail($otp));
+        DB::transaction(function () use ($validated, &$user, $otp) {
+            $user = User::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password']),
+                'phone' => null,
+                'email_otp' => $otp,
+                'email_otp_expires_at' => now()->addMinutes(10),
+                'email_verified_at' => null,
+            ]);
+
+            Mail::to($user->email)->queue(new SendOtpMail($otp));
+        });
         return response()->json(['message' => 'User registered successfully'], 201);
     }
     public function login(LoginRequest $request)
@@ -53,14 +57,15 @@ class AuthController extends Controller
 
         if (!$user->hasVerifiedEmail()) {
             return response()->json([
-                'message' => 'Email not verified'
+                'message' => 'Email not verified',
             ], 403);
         }
 
         $token = $user->createToken('auth_token')->plainTextToken;
-
         return response()->json([
+            'message'=>'Login succefully',
             'token' => $token,
+            'user' => $user,
             'token_type' => 'Bearer',
         ]);
     }
@@ -97,9 +102,11 @@ class AuthController extends Controller
         $user->email_otp = null;
         $user->email_otp_expires_at = null;
         $user->save();
-
+        $token = $user->createToken('auth_token')->plainTextToken;
         return response()->json([
-            'message' => 'Email verified successfully'
+            'message' => 'Email verified successfully',
+            'token' => $token,
+            'user' => $user,
         ]);
     }
 
@@ -141,5 +148,14 @@ class AuthController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Logged out successfully',
+        ]);
     }
 }

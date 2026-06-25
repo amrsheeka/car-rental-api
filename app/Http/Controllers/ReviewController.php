@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Car;
 use App\Models\Review;
 use Illuminate\Http\Request;
 
@@ -34,9 +35,21 @@ class ReviewController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Review $review)
+    public function show(Car $car)
     {
-        //
+        $reviews = $car->reviews()
+            ->with('user:id,name')
+            ->cursorPaginate(4);
+
+        $data = $reviews->toArray();
+
+        $data['reviews_count'] = $car->reviews()->count();
+        $data['average_rating'] = round($car->reviews()->avg('rating'), 1);
+        return response()->json([
+            'success' => true,
+            'message' => 'Car: ' . $car->id . ' retrieved successfully',
+            'reviews' => $data
+        ]);
     }
 
     /**

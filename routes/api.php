@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 // Auth
-Route::post('/verify-email-otp', [AuthController::class, 'verifyOtp']);
+Route::post('/verify-email', [AuthController::class, 'verifyOtp']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
@@ -30,7 +30,7 @@ Route::get('/branches', [BranchController::class, 'index']);
 Route::get('/branches/{branch}', [BranchController::class, 'show']);
 
 // Reviews
-Route::get('/cars/{car}/reviews', [ReviewController::class, 'index']);
+Route::get('/cars/{car}/reviews', [ReviewController::class, 'show']);
 
 // Coupons
 Route::post('/coupons/check', [CouponController::class, 'check']);
