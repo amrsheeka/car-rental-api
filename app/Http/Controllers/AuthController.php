@@ -7,6 +7,7 @@ use App\Http\Requests\RegisterRequest;
 use App\Mail\SendOtpMail;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -121,9 +122,14 @@ class AuthController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show()
     {
-        //
+        $user = Auth::user();
+        return response()->json([
+            'success'=>true,
+            'message'=>'Retrieved the current user successfuly',
+            'user'=>$user
+        ]);
     }
 
     /**

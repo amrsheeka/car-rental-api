@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ReviewRequest;
 use App\Models\Car;
 use App\Models\Review;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
@@ -19,17 +21,34 @@ class ReviewController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        //
-    }
+    public function create(ReviewRequest $request) {}
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ReviewRequest $request, Car $car)
     {
-        //
+        $validated = $request->validated();
+        $review = $car->reviews()->firstOrCreate([
+            'user_id' => Auth::id(),
+            'comment' => $validated['comment'],
+            'rating' => $validated['rating'],
+        ]);
+
+        if (! $review->wasRecentlyCreated) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You have already reviewed this car.'
+            ], 409);
+        }
+
+        return response()->json(
+            [
+                'message' => 'Review added successfully!',
+                'success' => true
+            ],
+            201
+        );
     }
 
     /**
@@ -38,7 +57,7 @@ class ReviewController extends Controller
     public function show(Car $car)
     {
         $reviews = $car->reviews()
-            ->with('user:id,name')
+            ->with('user:id,name')->latest()
             ->cursorPaginate(4);
 
         $data = $reviews->toArray();

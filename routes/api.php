@@ -51,11 +51,13 @@ Route::middleware(['auth:sanctum','verified'])
         return Auth::user();
     });
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/current-user', [AuthController::class, 'show']);
     Route::get('/profile', [AuthController::class, 'profile']);
     Route::post('/profile/update', [AuthController::class, 'updateProfile']);
 
     // Bookings
     Route::get('/bookings', [BookingController::class, 'index']);
+    Route::get('/bookings/{user}', [BookingController::class, 'userBookings']);
     Route::post('/bookings', [BookingController::class, 'store']);
     Route::get('/bookings/{booking}', [BookingController::class, 'show']);
     Route::post('/bookings/{booking}/cancel', [BookingController::class, 'cancel']);

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
 {
@@ -12,7 +14,8 @@ class BookingController extends Controller
      */
     public function index()
     {
-        //
+        $bookings = Booking::all();
+        return response()->json($bookings);
     }
 
     /**
@@ -28,7 +31,23 @@ class BookingController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'room_id' => 'required|exists:rooms,id',
+            'start_time' => 'required|date',
+            'end_time' => 'required|date|after:start_time',
+        ]);
+
+        $booking = Booking::create([
+            'user_id' => Auth::id(),
+            'room_id' => $validatedData['room_id'],
+            'start_time' => $validatedData['start_time'],
+            'end_time' => $validatedData['end_time'],
+        ]);
+
+        return response()->json([
+            'message' => 'Booking created successfully',
+            'booking' => $booking
+        ], 201);
     }
 
     /**
@@ -36,7 +55,7 @@ class BookingController extends Controller
      */
     public function show(Booking $booking)
     {
-        //
+        return response()->json($booking);
     }
 
     /**
@@ -61,5 +80,11 @@ class BookingController extends Controller
     public function destroy(Booking $booking)
     {
         //
+    }
+
+    public function userBookings(User $user)
+    {
+        $bookings = Booking::where('user_id', $user->id)->get();
+        return response()->json($bookings);
     }
 }
