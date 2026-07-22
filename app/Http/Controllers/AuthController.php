@@ -143,9 +143,53 @@ class AuthController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function updateProfile(Request $request)
     {
-        //
+        $user = Auth::user();
+
+        $request->validate([
+            'name' => 'sometimes|string|max:255',
+            'password' => 'sometimes|string|min:8|confirmed',
+            'phone' => 'sometimes|string|max:20',
+        ]);
+
+        if ($request->has('name')) {
+            $user->name = $request->name;
+        }
+        if ($request->has('phone')) {
+            $user->phone = $request->phone;
+        }
+        if ($request->has('password')) {
+            if(!$request->has('current_password')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Current password is required to change password'
+                ], 400);
+
+            }
+            if (!Hash::check($request->current_password, $user->password)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Current password is incorrect'
+                ], 400);
+            }
+            if ($request->current_password === $request->password) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'New password cannot be the same as the current password'
+                ], 400);
+            }
+            $user->password = Hash::make($request->password);
+        }
+
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Profile updated successfully',
+            'user' => $user
+        ]);
+
     }
 
     /**
