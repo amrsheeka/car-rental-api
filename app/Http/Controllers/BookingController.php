@@ -55,7 +55,11 @@ class BookingController extends Controller
      */
     public function show(Booking $booking)
     {
-        return response()->json($booking);
+        return response()->json([
+            'success' => true,
+            'message' => 'Retrieved booking successfully',
+            'booking' => $booking
+        ]);
     }
 
     /**
@@ -71,7 +75,18 @@ class BookingController extends Controller
      */
     public function update(Request $request, Booking $booking)
     {
-        //
+        $validatedData = $request->validate([
+            'room_id' => 'sometimes|exists:rooms,id',
+            'start_time' => 'sometimes|date',
+            'end_time' => 'sometimes|date|after:start_time',
+        ]);
+
+        $booking->update($validatedData);
+
+        return response()->json([
+            'message' => 'Booking updated successfully',
+            'booking' => $booking
+        ]);
     }
 
     /**
@@ -79,12 +94,20 @@ class BookingController extends Controller
      */
     public function destroy(Booking $booking)
     {
-        //
+        $booking->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Booking deleted successfully'
+        ]);
     }
 
     public function userBookings(User $user)
     {
-        $bookings = Booking::where('user_id', $user->id)->get();
-        return response()->json($bookings);
+        $bookings = Booking::where('user_id', $user->id)->paginate(10);
+        return response()->json([
+            'success' => true,
+            'message' => 'Retrieved user bookings successfully',
+            'bookings' => $bookings
+        ]);
     }
 }
