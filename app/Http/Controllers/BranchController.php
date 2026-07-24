@@ -12,7 +12,12 @@ class BranchController extends Controller
      */
     public function index()
     {
-        //
+        $branches = Branch::paginate(10);
+        return response()->json([
+            'success' => true,
+            'message' => 'Retrieved branches successfully',
+            'data' => $branches
+        ]);
     }
 
     /**
@@ -28,7 +33,21 @@ class BranchController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'address' => 'required|string|max:20',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
+        ]);
+
+        $branch = Branch::create($validatedData);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Branch created successfully',
+            'data' => $branch
+        ], 201);
     }
 
     /**
@@ -36,7 +55,11 @@ class BranchController extends Controller
      */
     public function show(Branch $branch)
     {
-        //
+        return response()->json([
+            'success' => true,
+            'message' => 'Retrieved branch successfully',
+            'data' => $branch
+        ]);
     }
 
     /**
@@ -52,7 +75,21 @@ class BranchController extends Controller
      */
     public function update(Request $request, Branch $branch)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'sometimes|required|string|max:255',
+            'city' => 'sometimes|required|string|max:255',
+            'address' => 'sometimes|required|string|max:20',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
+        ]);
+
+        $branch->update($validatedData);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Branch updated successfully',
+            'data' => $branch
+        ]);
     }
 
     /**
@@ -60,6 +97,11 @@ class BranchController extends Controller
      */
     public function destroy(Branch $branch)
     {
-        //
+        $branch->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Branch deleted successfully'
+        ]);
     }
 }
